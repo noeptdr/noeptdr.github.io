@@ -1,0 +1,1380 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    background: linear-gradient(135deg, #e5d3b3, #c4a484); /* Fond beige par défaut */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-image 0.5s ease, background-color 0.5s ease;
+    position: relative;
+    overflow: hidden;
+    margin-top: 30px; /* Espace pour la barre de menu en haut */
+}
+
+.background-image {
+    background: url('back.jpg') no-repeat center center fixed;
+    background-size: cover;
+}
+
+.container {
+    text-align: center;
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.titre-rigolo {
+    color: #333;
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+    animation: none;
+}
+
+.image-container {
+    margin: 3rem 0;
+}
+
+.image-rigolote {
+    max-width: 350px;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.boutons-container {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.bouton-rigolo {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    background: #007aff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.bouton-rigolo:hover {
+    background-color: #005bb5;
+    transform: translateY(-2px);
+}
+
+.filigrane {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    color: rgba(0, 0, 0, 0.3);
+    font-size: 0.9rem;
+    opacity: 1;
+    transition: color 0.3s ease;
+    text-shadow: none;
+    cursor: default;
+    z-index: 100;
+}
+
+.filigrane:hover {
+    opacity: 1;
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.window {
+    position: fixed;
+    width: 600px;
+    height: 500px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    resize: both;
+    min-width: 300px;
+    min-height: 200px;
+    display: none;
+    /* top and left will be set by JS */
+    transition: all 0.3s ease-in-out; /* Animation douce pour les changements de taille/position */
+}
+
+.window.dragging {
+    transition: none !important; /* Désactiver les transitions pendant le déplacement */
+}
+
+.window-header {
+    background: linear-gradient(to bottom, #e0e0e0, #d0d0d0); /* Léger dégradé */
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: move;
+    user-select: none;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom: 1px solid #b0b0b0; /* Bordure plus foncée */
+    position: relative; /* Nécessaire pour positionner les contrôles absolument */
+    z-index: 1; /* S'assurer que le header est au-dessus du contenu */
+}
+
+.window-title {
+    font-weight: normal;
+    color: #444;
+    flex-grow: 1;
+    text-align: center;
+    /* Retirer les marges car les boutons sont en position absolue */
+    margin: 0;
+}
+
+.window-controls {
+    display: flex;
+    gap: 8px;
+    position: absolute; /* Positionnement absolu par rapport au header */
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2; /* S'assurer que les contrôles sont au-dessus du header */
+    /* Afficher les symboles uniquement au survol de la barre de titre */
+     opacity: 0;
+     transition: opacity 0.1s ease;
+}
+
+.window-header:hover .window-controls {
+    opacity: 1;
+}
+
+.window-controls button {
+    width: 12px;
+    height: 12px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0; /* Masquer le texte par défaut */
+    transition: background-color 0.1s ease;
+    position: relative;
+    padding: 0;
+    /* Masquer les symboles par défaut */
+}
+
+.window-controls button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    display: flex; /* Permet de centrer le pseudo-élément */
+    justify-content: center;
+    align-items: center;
+    font-size: 10px; /* Taille des symboles */
+    color: #333;
+    opacity: 0; /* Masquer les symboles par défaut */
+    transition: opacity 0.1s ease;
+}
+
+/* Afficher les symboles au survol des boutons individuels */
+.window-controls button:hover::before {
+     opacity: 1;
+}
+
+.window-controls .window-minimize::before {
+    content: '−'; /* Signe moins */
+}
+
+.window-controls .window-maximize::before {
+    content: '+'; /* Signe plus ou agrandir */
+}
+
+.window-controls .window-close::before {
+    content: '×'; /* Signe croix */
+}
+
+
+.window-minimize {
+    background: #ffbd2e;
+}
+
+.window-maximize {
+    background: #28c940;
+}
+
+.window-close {
+    background: #ff5f57;
+}
+
+.window-controls button:hover {
+    filter: none; /* Pas de filtre au survol pour laisser voir la couleur */
+}
+
+.window.minimized {
+     height: 36px;
+     min-height: 36px;
+     /* Animation de minimisation vers le Dock ? Nécessite JS */
+}
+
+.window.maximized {
+    width: 100vw !important;
+    height: calc(100vh - 30px) !important; /* Tenir compte de la hauteur de la barre de menu */
+    top: 30px !important;
+    left: 0 !important;
+    border-radius: 0 !important;
+    transition: none; /* Pas d'animation lors de la maximisation instantanée */
+}
+
+
+.window-content {
+    height: calc(100% - 36px);
+    overflow: auto;
+    background-color: #fff; /* Fond blanc pour le contenu */
+}
+
+.window-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+
+/* Style pour la barre de menu (anciennement Dock) */
+.start-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 30px;
+    background-color: rgba(240, 240, 240, 0.9);
+    padding: 0 15px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    z-index: 150; /* Au-dessus de tout le reste */
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espacement des éléments du menu */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 0;
+}
+
+.start-button {
+    /* Bouton Apple ou menu principal */
+    padding: 5px 10px;
+    background-color: transparent;
+    color: #333;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    transition: background-color 0.2s;
+    font-weight: bold;
+}
+
+.start-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: none;
+}
+
+.taskbar-items {
+    display: flex;
+    flex-grow: 1;
+    gap: 15px; /* Espacement entre les titres des fenêtres ouvertes */
+    margin-left: 0;
+    align-items: center;
+    overflow: hidden;
+}
+
+.taskbar-item {
+    /* Représente le titre de la fenêtre ouverte dans la barre de menu */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+}
+
+.taskbar-item:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Fond léger au survol */
+    color: #000;
+    transform: none;
+}
+
+.taskbar-item.active {
+     background-color: rgba(0, 0, 0, 0.15); /* Fond plus marqué si actif */
+    font-weight: bold;
+     color: #000;
+}
+
+/* Le menu déroulant depuis le bouton Démarrer */
+.start-menu {
+    position: absolute;
+    top: 30px; /* Juste en dessous de la barre de menu */
+    left: 0;
+    width: 200px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ccc;
+    border-top: none;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    padding: 10px 0;
+    z-index: 160;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.start-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: block;
+    gap: 0;
+    max-height: none;
+    overflow-y: visible;
+    background-color: transparent;
+    box-shadow: none;
+    max-width: none;
+}
+
+.start-menu li {
+    text-align: left;
+}
+
+.start-menu li a {
+    display: block;
+    padding: 8px 20px;
+    text-decoration: none;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+    font-size: 1rem;
+    transition: background-color 0.1s ease;
+    flex-direction: row;
+    align-items: center;
+}
+
+.start-menu li a:hover {
+    background-color: #007aff;
+    color: white;
+    transform: none;
+}
+
+.menu-icon {
+    display: none;
+}
+
+
+/* Styles spécifiques pour la fenêtre Finder */
+.window-content.finder-content {
+    display: flex;
+    flex-direction: row;
+    padding: 0; /* Retirer le padding pour que les sections aillent jusqu'aux bords */
+}
+
+.finder-sidebar {
+    width: 180px;
+    background-color: #f9f9f9; /* Fond plus clair */
+    padding: 10px;
+    overflow-y: auto;
+    flex-shrink: 0;
+    border-right: 1px solid #e0e0e0; /* Bordure plus claire */
+}
+
+.finder-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.finder-sidebar li {
+    padding: 8px 5px; /* Plus de padding */
+    cursor: pointer;
+    color: #333;
+    font-size: 0.9rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    border-radius: 4px; /* Légers coins arrondis */
+}
+
+.finder-sidebar li:hover {
+    background-color: #e0e0e0; /* Fond au survol */
+}
+
+.finder-sidebar li.selected {
+    background-color: #007aff; /* Fond bleu si sélectionné */
+    color: white; /* Texte blanc si sélectionné */
+}
+
+.finder-main-content {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap; /* Permettre aux éléments de passer à la ligne */
+    gap: 15px; /* Espacement entre les icônes de fichiers */
+    align-items: flex-start; /* Aligner les éléments en haut */
+    justify-content: flex-start; /* Aligner les éléments à gauche */
+}
+
+.finder-main-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.finder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px; /* Zone cliquable plus grande */
+    border-radius: 5px;
+    transition: background-color 0.1s ease;
+    max-width: 80px; /* Largeur max pour chaque icône */
+    text-align: center;
+}
+
+.finder-item:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Fond léger au survol */
+}
+
+.finder-item img {
+    width: 40px; /* Taille de l'icône */
+    height: 40px;
+    margin-bottom: 5px;
+    object-fit: contain;
+}
+
+.finder-item span {
+    font-size: 0.8rem;
+    color: #333;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    word-break: break-word; /* Casser les mots longs */
+}
+
+/* Style pour les fenêtres d'image */
+.image-viewer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.image-viewer-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Styles spécifiques pour Baget Exploreur (ajustements) */
+.window#bagetExplorerWindow .window-content {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.browser-bar {
+    padding: 8px;
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #b0b0b0;
+    display: flex;
+    align-items: center;
+}
+
+.browser-bar .search-input {
+    flex-grow: 1;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.window#bagetExplorerWindow .window-content iframe {
+    flex-grow: 1;
+    height: 100%;
+}
+
+/* Animations existantes */
+@keyframes rebond {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.danse {
+    animation: danse 0.5s infinite;
+}
+
+@keyframes danse {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(5deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* Styles pour la Calculatrice */
+.calculator-content {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    padding: 5px;
+    background-color: #e0e0e0;
+    user-select: none; /* Empêche la sélection du texte */
+}
+
+.calculator-display {
+    background-color: #222;
+    color: #0f0; /* Vert lumineux */
+    font-size: 2em;
+    text-align: right;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.calculator-buttons .btn {
+    padding: 15px;
+    font-size: 1.2em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: background-color 0.1s ease;
+}
+
+.calculator-buttons .btn:hover {
+    background-color: #d0d0d0;
+}
+
+.calculator-buttons .operator {
+    background-color: #ff9500;
+    color: white;
+}
+
+.calculator-buttons .operator:hover {
+    background-color: #e08000;
+}
+
+.calculator-buttons .equals {
+    background-color: #007aff;
+    color: white;
+    grid-column: span 2; /* Le bouton égal prend 2 colonnes */
+}
+
+.calculator-buttons .equals:hover {
+    background-color: #005bb5;
+}
+
+.calculator-buttons .clear {
+    background-color: #d3d3d3;
+}
+
+.calculator-buttons .clear:hover {
+    background-color: #b0b0b0;
+}
+
+.calculator-buttons .decimal {
+    background-color: #f0f0f0;
+}
+
+.calculator-buttons .decimal:hover {
+    background-color: #d0d0d0;
+}
+
+/* Ajustement pour la taille de la fenêtre de la calculatrice */
+#calculatorWindow {
+    width: 250px;
+    height: 350px;
+}
+
+
+/* Styles pour la fenêtre d'affichage d'image */
+.image-viewer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.image-viewer-content img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Styles pour le Snake Game */
+#snakeCanvas {
+    background-color: #f0f0f0;
+    border: 2px solid #333;
+    display: block;
+    margin: 0 auto;
+}
+
+.snake-score {
+    text-align: center;
+    font-size: 1.5em;
+    margin: 10px 0;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+/* Styles pour le Bloc-notes de Baget */
+#bagetNotes {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    border: none;
+    resize: none;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-size: 1.2em;
+    line-height: 1.5;
+    background-color: #fff;
+}
+
+#bagetNotes:focus {
+    outline: none;
+}
+
+/* Ajustement de la taille de la fenêtre du Bloc-notes */
+#bagetNotesWindow {
+    width: 400px;
+    height: 500px;
+}
+
+/* Animations pour les effets visuels */
+@keyframes pulsation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes clignotement {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes tremblement {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+@keyframes agrandissement {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes couleur-changeante {
+    0% { color: red; }
+    33% { color: blue; }
+    66% { color: green; }
+    100% { color: red; }
+}
+
+/* Styles pour les paramètres */
+.setting-section {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.setting-section h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.setting-section button {
+    margin-right: 10px;
+}
+
+/* Styles pour le mode sombre */
+body.dark-mode {
+    background: #333 !important; /* Fond sombre */
+    color: #eee; /* Texte clair */
+}
+
+body.dark-mode .container {
+    background: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .titre-rigolo {
+    color: #eee;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .filigrane {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .filigrane:hover {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+body.dark-mode .window {
+    background: #444;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .window-header {
+    background: linear-gradient(to bottom, #555, #444);
+    border-bottom: 1px solid #666;
+}
+
+body.dark-mode .window-title {
+    color: #eee;
+}
+
+body.dark-mode .window-controls button::before {
+    color: #eee;
+}
+
+body.dark-mode .window-content {
+    background-color: #555;
+    color: #eee;
+}
+
+body.dark-mode .finder-sidebar {
+    background-color: #4f4f4f;
+    border-right: 1px solid #666;
+}
+
+body.dark-mode .finder-sidebar li {
+    color: #eee;
+}
+
+body.dark-mode .finder-sidebar li:hover {
+    background-color: #666;
+}
+
+body.dark-mode .finder-sidebar li.selected {
+    background-color: #007aff;
+    color: white;
+}
+
+body.dark-mode .finder-item span {
+    color: #eee;
+}
+
+body.dark-mode .browser-bar {
+    background-color: #4f4f4f;
+    border-bottom: 1px solid #666;
+}
+
+body.dark-mode .browser-bar .search-input {
+    background-color: #666;
+    color: #eee;
+    border: 1px solid #777;
+}
+
+body.dark-mode .calculator-display {
+    background-color: #333;
+    color: #0f0;
+}
+
+body.dark-mode .calculator-buttons .btn {
+    background-color: #666;
+    color: #eee;
+}
+
+body.dark-mode .calculator-buttons .btn:hover {
+    background-color: #777;
+}
+
+body.dark-mode .calculator-buttons .operator {
+    background-color: #ff9500;
+    color: white;
+}
+
+body.dark-mode .calculator-buttons .operator:hover {
+    background-color: #e08000;
+}
+
+body.dark-mode .calculator-buttons .equals {
+    background-color: #007aff;
+    color: white;
+}
+
+body.dark-mode .calculator-buttons .equals:hover {
+    background-color: #005bb5;
+}
+
+body.dark-mode .calculator-buttons .clear {
+    background-color: #888;
+}
+
+body.dark-mode .calculator-buttons .clear:hover {
+    background-color: #999;
+}
+
+body.dark-mode .calculator-buttons .decimal {
+    background-color: #666;
+}
+
+body.dark-mode .calculator-buttons .decimal:hover {
+    background-color: #777;
+}
+
+body.dark-mode #bagetNotes {
+    background-color: #555;
+    color: #eee;
+}
+
+body.dark-mode .start-bar {
+    background-color: rgba(60, 60, 60, 0.9);
+    box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05);
+}
+
+body.dark-mode .start-button {
+    color: #eee;
+}
+
+body.dark-mode .start-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .taskbar-item {
+    color: #eee;
+}
+
+body.dark-mode .taskbar-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+body.dark-mode .taskbar-item.active {
+     background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+body.dark-mode .start-menu {
+    background-color: rgba(60, 60, 60, 0.95);
+    border: 1px solid #555;
+}
+
+body.dark-mode .start-menu li a {
+    color: #eee;
+}
+
+body.dark-mode .start-menu li a:hover {
+    background-color: #007aff;
+    color: white;
+}
+
+/* Styles pour les titres de catégorie dans le menu Démarrer */
+.start-menu .menu-category-header {
+    font-weight: bold;
+    margin-top: 10px; /* Espace au-dessus de la catégorie */
+    margin-bottom: 5px; /* Espace en dessous du titre */
+    padding: 5px 20px; /* Padding pour l'alignement */
+    color: #555; /* Couleur légèrement différente */
+    border-bottom: 1px solid #eee; /* Petite ligne de séparation */
+}
+
+body.dark-mode .start-menu .menu-category-header {
+    color: #ccc;
+    border-bottom: 1px solid #666;
+}
+
+/* Classe pour masquer des éléments */
+.hidden {
+    display: none !important;
+}
+
+/* Animation pour les effets visuels */
+@keyframes pulsation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Règles générales pour le mode sombre */
+body.dark-mode * {
+    /* S'assurer que le texte est clair par défaut */
+    color: #eee;
+}
+
+body.dark-mode .window-content, body.dark-mode .setting-section, body.dark-mode .finder-sidebar, body.dark-mode .browser-bar, body.dark-mode #bagetNotes, body.dark-mode .calculator-display, body.dark-mode .calculator-buttons .btn {
+     /* Ajuster certains fonds pour qu'ils ne soient pas blancs */
+     background-color: #555;
+}
+
+body.dark-mode .finder-sidebar {
+     background-color: #4f4f4f; /* Garder le fond plus clair pour la sidebar */
+}
+
+body.dark-mode .browser-bar .search-input {
+    background-color: #666; /* Fond de l'input de recherche plus sombre */
+    color: #eee;
+}
+
+body.dark-mode .start-menu li a:hover {
+    background-color: #007aff;
+    color: white;
+}
+
+/* Styles pour l'App Store */
+.app-store-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#appList {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    padding: 10px;
+    max-height: calc(100% - 50px); /* Laisser de l'espace pour le titre */
+    overflow-y: auto;
+}
+
+.app-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.app-item img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+}
+
+.app-item span {
+    font-size: 0.9em;
+    color: #333;
+}
+
+.app-item button {
+    margin-top: 8px;
+    padding: 5px 10px;
+    font-size: 0.8em;
+}
+
+body.dark-mode .app-store-content h2 {
+    color: #eee;
+}
+
+body.dark-mode .app-item {
+    background-color: #555;
+    border: 1px solid #666;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .app-item span {
+    color: #eee;
+}
+
+/* Styles pour Lanceur de Dés, Fait Aléatoire, Minuteur Simple */
+#diceRollerWindow, #randomFactWindow, #simpleTimerWindow {
+    /* Ajuster la taille ou d'autres styles si nécessaire */
+}
+
+/* --- Adaptation Mobile --- */
+@media (max-width: 768px) {
+    body {
+        margin-top: 50px; /* Ajuster la marge pour la barre de menu mobile */
+    }
+
+    .container {
+        padding: 1rem;
+        margin-top: 50px; /* Assurer un espace sous la barre de menu */
+    }
+
+    .titre-rigolo {
+        font-size: 2rem;
+    }
+
+    .image-rigolote {
+        max-width: 250px;
+    }
+
+    .boutons-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .bouton-rigolo {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .start-bar {
+        height: 50px; /* Augmenter la hauteur de la barre de menu */
+        padding: 0 10px; /* Ajuster le padding */
+    }
+
+    .start-button {
+        font-size: 1.2rem;
+    }
+
+     .taskbar-items {
+         gap: 10px; /* Réduire l'espacement des éléments de la barre de tâches */
+     }
+
+    .taskbar-item {
+        max-width: 100px; /* Réduire la largeur max des éléments de la barre de tâches */
+        font-size: 0.8rem;
+    }
+
+    .start-menu {
+        top: 50px; /* Placer sous la barre de menu */
+        width: 150px; /* Réduire la largeur du menu */
+    }
+
+    .start-menu li a {
+        padding: 6px 15px; /* Ajuster le padding des éléments du menu */
+        font-size: 0.9rem;
+    }
+
+    .window {
+        width: 95vw !important; /* Les fenêtres prennent presque toute la largeur */
+        height: calc(100vh - 60px) !important; /* Ajuster la hauteur */
+        top: 55px !important; /* Positionner sous la barre de menu */
+        left: 2.5vw !important; /* Centrer horizontalement */
+        transform: none !important; /* Désactiver le translate pour le centrage */
+    }
+
+    .window.maximized {
+         height: calc(100vh - 50px) !important; /* Ajuster la hauteur max pour mobile */
+         top: 50px !important;
+         left: 0 !important;
+    }
+
+    .window-header {
+        padding: 6px 10px;
+    }
+
+    .window-controls {
+        gap: 5px;
+        left: 8px;
+    }
+
+    .window-controls button {
+        width: 10px;
+        height: 10px;
+    }
+
+    .window-controls button::before {
+        font-size: 8px;
+    }
+
+    .finder-sidebar {
+        width: 120px; /* Réduire la largeur de la sidebar du Finder */
+    }
+
+    .finder-item {
+        max-width: 60px; /* Réduire la largeur max des icônes du Finder */
+    }
+
+    .finder-item img {
+        width: 30px; /* Réduire la taille des icônes du Finder */
+        height: 30px;
+    }
+
+    .app-item {
+        padding: 8px;
+    }
+
+    .app-item img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .app-item span {
+        font-size: 0.8em;
+    }
+
+    .calculator-buttons .btn {
+        padding: 10px;
+        font-size: 1em;
+    }
+
+    #bagetNotes {
+        padding: 10px;
+        font-size: 1em;
+    }
+
+     #diceResult {
+         font-size: 3em;
+     }
+
+     #randomFactText {
+         font-size: 1em;
+     }
+
+     #timerInput {
+         font-size: 1.2em;
+         width: 60px;
+     }
+
+     #timerDisplay {
+         font-size: 2em;
+     }
+
+     /* Cacher le conteneur principal en mode simple sur mobile */
+    body.simple-display .container {
+        display: none !important;
+    }
+
+}
+
+
+/* Animation pour les effets visuels */
+@keyframes pulsation {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes clignotement {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+@keyframes tremblement {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+
+@keyframes agrandissement {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+@keyframes couleur-changeante {
+    0% { color: red; }
+    33% { color: blue; }
+    66% { color: green; }
+    100% { color: red; }
+}
+
+/* Styles pour la fenêtre de dessin */
+.drawing-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+.drawing-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #ccc;
+}
+
+.tool-group {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+    background-color: #f5f5f5;
+    border-radius: 5px;
+}
+
+.tool-btn {
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.tool-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.tool-btn.active {
+    background-color: #007aff;
+    color: white;
+}
+
+.canvas-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: auto;
+}
+
+#drawingCanvas {
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    touch-action: none;
+}
+
+/* Mode sombre pour le dessin */
+body.dark-mode .drawing-content {
+    background-color: #333;
+}
+
+body.dark-mode .drawing-toolbar {
+    background-color: #444;
+    border-bottom-color: #555;
+}
+
+body.dark-mode .tool-group {
+    background-color: #555;
+}
+
+body.dark-mode .tool-btn {
+    background-color: #666;
+    color: #fff;
+}
+
+body.dark-mode .tool-btn:hover {
+    background-color: #777;
+}
+
+body.dark-mode .tool-btn.active {
+    background-color: #007aff;
+}
+
+body.dark-mode #drawingCanvas {
+    background-color: #222;
+}
+
+/* Adaptation mobile */
+@media (max-width: 768px) {
+    .drawing-toolbar {
+        flex-direction: column;
+        padding: 5px;
+    }
+
+    .tool-group {
+        width: 100%;
+        justify-content: space-between;
+        padding: 3px;
+    }
+
+    .tool-btn {
+        padding: 12px;
+        font-size: 1.2em;
+    }
+
+    #drawingCanvas {
+        max-width: 100%;
+        max-height: calc(100vh - 200px);
+    }
+
+    .window {
+        width: 100vw !important;
+        height: 100vh !important;
+        top: 0 !important;
+        left: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    .window-header {
+        padding: 10px;
+    }
+
+    .window-controls {
+        gap: 8px;
+    }
+
+    .window-controls button {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* Ajustements pour les contrôles tactiles */
+    input[type="range"] {
+        width: 100%;
+        height: 30px;
+    }
+
+    input[type="color"] {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: none;
+    }
+
+    select {
+        padding: 8px;
+        font-size: 1.1em;
+    }
+}
+
+/* Styles pour la grille et la symétrie */
+.canvas-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: linear-gradient(#ccc 1px, transparent 1px),
+                      linear-gradient(90deg, #ccc 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+.canvas-symmetry {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    border-left: 2px dashed #ff0000;
+} 

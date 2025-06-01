@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baget OS</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titre-rigolo">Bienvenue sur Baget OS !</h1>
+        <div class="image-container">
+            <img src="image.jpg" alt="Image amusante" class="image-rigolote">
+        </div>
+        <div class="boutons-container">
+            <button class="bouton-rigolo" onclick="appliquerEffetVisuel()">Effet Visuel !</button>
+            <button class="bouton-rigolo" onclick="faireDanser()">Faire danser l'image !</button>
+        </div>
+    </div>
+
+    <div class="window" id="window1">
+        <div class="window-header">
+            <div class="window-title">MDR les vidéos que j'aime bien #1</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div id="player1"></div>
+        </div>
+    </div>
+
+    <div class="window" id="window2">
+        <div class="window-header">
+            <div class="window-title">MDR les vidéos que j'aime bien #2</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <div id="player2"></div>
+        </div>
+    </div>
+
+    <div class="window" id="clockWindow">
+        <div class="window-header">
+            <div class="window-title">Horloge</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="text-align: center; display: flex; justify-content: center; align-items: center; font-size: 3em; font-family: 'Comic Sans MS', cursive, sans-serif;">
+            <div id="currentTime"></div>
+        </div>
+    </div>
+
+   
+
+    <div class="window" id="bagetExplorerWindow">
+        <div class="window-header">
+            <div class="window-title">Baget Exploreur</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="browser-bar">
+            <input type="text" class="search-input" placeholder="Rechercher sur Google...">
+        </div>
+        <div class="window-content">
+             <iframe src="https://www.google.com" frameborder="0" allowfullscreen width="100%" height="100%"></iframe>
+        </div>
+    </div>
+
+    <div class="window" id="finderWindow">
+        <div class="window-header">
+            <div class="window-title">Finder</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content finder-content">
+            <div class="finder-sidebar">
+                <ul>
+                    <li>Images</li>
+                    <!-- Les noms d'images seront ajoutés ici par JavaScript -->
+                </ul>
+            </div>
+            <div class="finder-main-content">
+                <!-- L'image sélectionnée sera affichée ici -->
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="specialVideoWindow">
+        <div class="window-header">
+            <div class="window-title">Vidéo Spéciale !</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <iframe width="100%" height="100%" src="https://www.youtube.com/embed/MI87Ic897Yc?autoplay=0&rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="window" id="calculatorWindow">
+        <div class="window-header">
+            <div class="window-title">Calculatrice</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content calculator-content">
+            <div class="calculator-display">0</div>
+            <div class="calculator-buttons">
+                <button class="btn clear">C</button>
+                <button class="btn operator">/</button>
+                <button class="btn operator">*</button>
+                <button class="btn operator">-</button>
+                <button class="btn number">7</button>
+                <button class="btn number">8</button>
+                <button class="btn number">9</button>
+                <button class="btn operator">+</button>
+                <button class="btn number">4</button>
+                <button class="btn number">5</button>
+                <button class="btn number">6</button>
+                <button class="btn equals">=</button>
+                <button class="btn number">1</button>
+                <button class="btn number">2</button>
+                <button class="btn number">3</button>
+                <button class="btn number">0</button>
+                <button class="btn decimal">.</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="snakeWindow">
+        <div class="window-header">
+            <div class="window-title">Snake Game</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <canvas id="snakeCanvas" width="400" height="400"></canvas>
+            <div class="snake-score">Score: <span id="snakeScore">0</span></div>
+        </div>
+    </div>
+
+    <div class="window" id="bagetNotesWindow">
+        <div class="window-header">
+            <div class="window-title">Bloc-notes de Baget</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content">
+            <textarea id="bagetNotes" placeholder="Écrivez ici... 🥖"></textarea>
+        </div>
+    </div>
+
+    <div class="window" id="backgroundSettingsWindow">
+        <div class="window-header">
+            <div class="window-title">Paramètres du Fond d'écran</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 20px;">
+            <h2>Choisir un fond d'écran</h2>
+            <button id="setBeigeBackground" class="bouton-rigolo">Fond Beige</button>
+            <button id="setImageBackground" class="bouton-rigolo">Fond Image (back.jpg)</button>
+        </div>
+    </div>
+
+    <div class="window" id="settingsWindow">
+        <div class="window-header">
+            <div class="window-title">Paramètres</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 20px;">
+            <h2>Paramètres</h2>
+            
+            <div class="setting-section">
+                <h3>Apparence</h3>
+                <button id="toggleDarkMode" class="bouton-rigolo">Mode Sombre</button>
+                <button id="toggleSimpleDisplay" class="bouton-rigolo">Affichage Simple</button>
+            </div>
+
+            <div class="setting-section">
+                <h3>Langue</h3>
+                <button id="setFrenchLanguage" class="bouton-rigolo">Français</button>
+                <button id="setBagetLanguage" class="bouton-rigolo">🥖🥖🥖</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="window" id="aboutWindow">
+        <div class="window-header">
+            <div class="window-title">À propos</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 20px;">
+            <h2>À propos de ce site amusant</h2>
+            <p>Ce site a été créé avec ❤️ pour m'entraîner et m'amuser avec les technologies web.</p>
+            <p>Il simule un environnement de bureau simple avec des fenêtres interactives.</p>
+            <p>Créé par glownydev.</p>
+        </div>
+    </div>
+
+    <div class="window" id="drawingWindow">
+        <div class="window-header">
+            <div class="window-title">Dessin</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content drawing-content">
+            <div class="drawing-toolbar">
+                <div class="tool-group">
+                    <button class="tool-btn" data-tool="brush" title="Pinceau">🖌️</button>
+                    <button class="tool-btn" data-tool="eraser" title="Gomme">🧹</button>
+                    <button class="tool-btn" data-tool="fill" title="Remplissage">🪣</button>
+                    <button class="tool-btn" data-tool="line" title="Ligne">📏</button>
+                    <button class="tool-btn" data-tool="circle" title="Cercle">⭕</button>
+                    <button class="tool-btn" data-tool="rectangle" title="Rectangle">⬜</button>
+                </div>
+                <div class="tool-group">
+                    <input type="color" id="strokeColor" title="Couleur">
+                    <input type="range" id="strokeSize" min="1" max="50" value="2" title="Taille">
+                    <input type="range" id="opacity" min="0" max="100" value="100" title="Opacité">
+                </div>
+                <div class="tool-group">
+                    <button id="clearCanvas" title="Effacer tout">🗑️</button>
+                    <button id="saveCanvas" title="Sauvegarder">💾</button>
+                    <button id="undoCanvas" title="Annuler">↩️</button>
+                    <button id="redoCanvas" title="Rétablir">↪️</button>
+                </div>
+                <div class="tool-group">
+                    <button id="toggleGrid" title="Grille">📏</button>
+                    <button id="toggleSymmetry" title="Symétrie">🔄</button>
+                    <select id="blendMode">
+                        <option value="normal">Normal</option>
+                        <option value="multiply">Multiplier</option>
+                        <option value="screen">Écran</option>
+                        <option value="overlay">Superposition</option>
+                    </select>
+                </div>
+            </div>
+            <div class="canvas-container">
+                <canvas id="drawingCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nouvelles applications -->
+
+    <div class="window" id="appStoreWindow">
+        <div class="window-header">
+            <div class="window-title">Baget App Store</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content app-store-content" style="padding: 15px;">
+            <h2>Applications Disponibles</h2>
+            <div id="appList">
+                <!-- Les applications seront listées ici par JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <div class="window" id="diceRollerWindow">
+        <div class="window-header">
+            <div class="window-title">Lanceur de Dés</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="text-align: center; padding: 20px;">
+            <h2>Lancer un dé</h2>
+            <p style="font-size: 4em; margin: 20px 0;" id="diceResult">-</p>
+            <button class="bouton-rigolo" id="rollDiceButton">Lancer le dé !</button>
+        </div>
+    </div>
+
+     <div class="window" id="randomFactWindow">
+        <div class="window-header">
+            <div class="window-title">Fait Aléatoire</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="padding: 20px;">
+            <h2>Un fait amusant :</h2>
+            <p id="randomFactText" style="font-size: 1.2em; line-height: 1.5;">Chargement...</p>
+            <button class="bouton-rigolo" id="newFactButton" style="margin-top: 15px;">Autre fait !</button>
+        </div>
+    </div>
+
+     <div class="window" id="simpleTimerWindow">
+        <div class="window-header">
+            <div class="window-title">Minuteur Simple</div>
+            <div class="window-controls">
+                <button class="window-minimize">-</button>
+                <button class="window-maximize">□</button>
+                <button class="window-close">×</button>
+            </div>
+        </div>
+        <div class="window-content" style="text-align: center; padding: 20px;">
+            <h2>Minuteur</h2>
+            <input type="number" id="timerInput" value="60" min="1" style="font-size: 1.5em; width: 80px; text-align: center; margin-bottom: 15px;">
+            <p style="font-size: 3em;" id="timerDisplay">00:60</p>
+            <button class="bouton-rigolo" id="startTimerButton" style="margin-right: 10px;">Démarrer</button>
+            <button class="bouton-rigolo" id="stopTimerButton" style="background-color: #ff5f57;">Arrêter</button>
+        </div>
+    </div>
+
+    <div class="filigrane">made by glownydev ❤️</div>
+
+    <div class="start-bar">
+        <button class="start-button">▶️ Démarrer</button>
+        <div class="taskbar-items"></div>
+        <div class="start-menu" id="startMenu">
+            <ul>
+                <li><a href="#" class="menu-item" data-target="window1">MDR vidéos #1</a></li>
+                <li><a href="#" class="menu-item" data-target="window2">MDR vidéos #2</a></li>
+                
+                <li><a href="#" class="menu-item" data-target="finderWindow">Finder</a></li>
+                <li><a href="#" class="menu-item" data-target="clockWindow">Horloge</a></li>
+                <li><a href="#" class="menu-item" data-target="bagetExplorerWindow">Baget Exploreur</a></li>
+                <li><a href="#" class="menu-item" data-target="specialVideoWindow">Vidéo Spéciale</a></li>
+                <li><a href="#" class="menu-item" data-target="calculatorWindow">Calculatrice</a></li>
+                <li><a href="#" class="menu-item" data-target="snakeWindow">Snake Game</a></li>
+                <li><a href="#" class="menu-item" data-target="bagetNotesWindow">Bloc-notes de Baget</a></li>
+                <li><a href="#" class="menu-item" data-target="backgroundSettingsWindow">Fond d'écran</a></li>
+                <li><a href="#" class="menu-item" data-target="settingsWindow">Paramètres</a></li>
+                <li><a href="#" class="menu-item" data-target="aboutWindow">À propos</a></li>
+                <li><a href="#" class="menu-item" data-target="drawingWindow">Dessin</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player1;
+        var player2;
+
+        function onYouTubeIframeAPIReady() {
+            player1 = new YT.Player('player1', {
+                videoId: 'M8dsSVEVMMQ',
+                events: {
+                    'onReady': onPlayerReady,
+                    'onError': onPlayerError
+                }
+            });
+            player2 = new YT.Player('player2', {
+                videoId: '2TEiF3WmIKw',
+                 events: {
+                    'onReady': onPlayerReady,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Optionnel: lire la vidéo quand le lecteur est prêt
+            // event.target.playVideo();
+        }
+
+        function onPlayerError(event) {
+             console.error('YouTube Player Error:', event.data);
+             // Afficher un message d'erreur plus précis si possible
+             const playerId = event.target.getIframe().parentElement.id;
+             const errorDiv = document.getElementById(playerId);
+             if(errorDiv) {
+                 errorDiv.innerHTML = '<p>Erreur de lecture vidéo. Code: ' + event.data + '</p>';
+                 errorDiv.style.color = 'red';
+                 errorDiv.style.textAlign = 'center';
+                 errorDiv.style.padding = '20px';
+             }
+        }
+
+    </script>
+    <script src="script.js"></script>
+</body>
+</html> 
