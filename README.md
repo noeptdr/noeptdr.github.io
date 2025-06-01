@@ -54,7 +54,7 @@ git clone https://github.com/glownydev/noesite
 - glownydev ❤️
 
 ## 📄 Licence
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+Ce projet est sous licence Apache 2.0. Voir le fichier `LICENSE` pour plus de détails.
 
 ---
 
